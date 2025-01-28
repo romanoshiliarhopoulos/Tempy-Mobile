@@ -3,96 +3,150 @@ import {
   Text,
   View,
   SafeAreaView,
-  ActivityIndicator,
+  ScrollView,
+  Dimensions,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, onValue } from "firebase/database";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function Body() {
-  const [live, setLive] = useState({ temp: 0, hum: 0, time: "" });
-  const [loading, setLoading] = useState(true); // State to track loading
+export default function MidBody() {
+  const [tempData, setTempData] = useState<number[]>(Array(24).fill(0));
+  const [humidityData, setHumidityData] = useState<number[]>(Array(24).fill(0));
+  const [timeLabels, setTimeLabels] = useState<string[]>(Array(24).fill("Now"));
 
   useEffect(() => {
-    // Call a function to set up the Firebase listener
-    const unsubscribe = updateLiveTemp(setLive, setLoading);
-    return () => unsubscribe(); // Cleanup listener on component unmount
+    // Simulating fetching data and updating state
+    const fetchData = async () => {
+      // Replace this with real data-fetching logic
+      const temperatures = Array.from({ length: 24 }, () =>
+        Math.round(Math.random() * 40)
+      );
+      const humidities = Array.from({ length: 24 }, () =>
+        Math.round(Math.random() * 100)
+      );
+
+      const timeArray = Array(24)
+        .fill(null)
+        .map((_, index) => {
+          const date = new Date();
+          date.setHours(date.getHours() - index);
+          return `${date.getHours()}:00`;
+        });
+
+      setTempData(temperatures.reverse());
+      setHumidityData(humidities.reverse());
+      setTimeLabels(timeArray.reverse());
+    };
+
+    fetchData();
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      {loading ? (
-        <ActivityIndicator size="large" color="#00ff00" />
-      ) : (
-        <>
-          <Text style={styles.header}> {live.temp}°</Text>
-          <Text style={styles.subtext}> ● Live: {live.time} </Text>
-        </>
-      )}
+      {/* Temperature Scroll View */}
+      <View style={styles.view}>
+        <View style={styles.row}>
+          <Text style={styles.text}>Temperature:</Text>
+          <Text style={styles.textLeft}>Past 12h</Text>
+        </View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContainer}
+        >
+          {tempData.map((temp, index) => (
+            <View key={index} style={styles.dataItem}>
+              <Text style={styles.timeLabel}>{timeLabels[index]}</Text>
+              <Text style={styles.dataValue}>{temp}°</Text>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
 
-      <StatusBar style="auto" />
+      {/* Humidity Scroll View */}
+      <View style={styles.view2}>
+        <View style={styles.row}>
+          <Text style={styles.text}>Humidity:</Text>
+          <Text style={styles.textLeft}>Past 12h</Text>
+        </View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContainer}
+        >
+          {humidityData.map((humidity, index) => (
+            <View key={index} style={styles.dataItem}>
+              <Text style={styles.timeLabel}>{timeLabels[index]}</Text>
+              <Text style={styles.dataValue}>{humidity}%</Text>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
 
-// Function that fetches and updates the live temperature.
-async function updateLiveTemp(setLive, setLoading) {
-  // Firebase configuration properties.
-  const firebaseConfig = {
-    apiKey: "AIzaSyD38K9ZpLZpFQbGruwO3EnoGSOrhmY45Ug",
-    authDomain: "iot-app-20b70.firebaseapp.com",
-    databaseURL: "https://iot-app-20b70-default-rtdb.firebaseio.com",
-    projectId: "iot-app-20b70",
-    storageBucket: "iot-app-20b70.firebasestorage.app",
-    messagingSenderId: "206130198957",
-    appId: "1x:206130198957:web:a8d92d4c0c923d92004924",
-    measurementId: "G-HQCMWBSZK4",
-  };
-  console.log("entered function");
-
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  const readingsRef = ref(db, "readings");
-
-  const unsubscribe = onValue(readingsRef, (snapshot) => {
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      const timestamp = data.timestamp;
-      setLive({
-        temp: data.tempdata || 0, // Fallback to 0 if tempdata is missing
-        hum: data.humiditydata || 0, // Fallback to 0 if humiditydata is missing
-        time: timestamp.substring(11, 16) || "N/A",
-      });
-      console.log(`Temperature: ${data.tempdata}°C`);
-      console.log(`Humidity: ${data.humiditydata}%`);
-      console.log(`Last updated: ${data.timestamp}`);
-
-      // Set loading to false once the data is fetched
-      setLoading(false);
-    } else {
-      console.log("No data available");
-    }
-  });
-
-  // Return a cleanup function to remove the listener
-  return () => unsubscribe();
-}
+const { width: screenWidth } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#F5F5F5",
+  },
+  view: {
+    backgroundColor: "#496481",
+    borderRadius: 20,
+    height: 200,
+    width: screenWidth * 0.87,
+    alignSelf: "center",
+    marginTop: 20,
+    padding: 10,
+  },
+  view2: {
+    backgroundColor: "#496481",
+    borderRadius: 20,
+    height: 200,
+    width: screenWidth * 0.87,
+    alignSelf: "center",
+    marginTop: 25,
+    padding: 10,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 13,
+    fontFamily: "Calibri",
+    color: "white",
+  },
+  textLeft: {
+    fontSize: 13,
+    fontFamily: "Calibri",
+    color: "white",
+  },
+  scrollContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  dataItem: {
+    width: 60,
+    height: 100,
+    backgroundColor: "#3C4D5C",
+    borderRadius: 10,
+    marginHorizontal: 5,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#282c34",
   },
-  header: {
+  timeLabel: {
+    fontSize: 12,
     color: "white",
-    fontSize: 60,
-    fontFamily: "Roboto, sans-serif",
+    marginBottom: 5,
   },
-  subtext: {
-    color: "#7eed9a",
-    fontSize: 15,
+  dataValue: {
+    fontSize: 16,
+    color: "white",
+    fontWeight: "bold",
   },
 });
