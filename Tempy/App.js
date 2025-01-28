@@ -1,20 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import Body from "./Body";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+    <SafeAreaView style={styles.container}>
+      <LinearGradient
+        colors={["#487eb8", "#1a1b24"]}
+        style={[StyleSheet.absoluteFill]}
+      />
+      <Text> </Text>
+      <Body />
+      <View style={styles.header}>
+        <Text> </Text>
+        <Text> </Text>
+        <Text style={styles.text}>This is Tempy!</Text>
+      </View>
+
       <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#1F3A6D",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    paddingTop: 10,
+  },
+  header: {},
+  text: {
+    color: "white",
+    textAlign: "center",
   },
 });
