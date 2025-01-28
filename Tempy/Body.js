@@ -9,6 +9,7 @@ import { StatusBar } from "expo-status-bar";
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { useEffect, useState } from "react";
+import MidBody from "./MidBody";
 
 //this array will hold the live temperature and humidity values, temp at index 0 and hum at index 1
 
@@ -28,8 +29,13 @@ export default function Body() {
         <ActivityIndicator size="large" color="#00ff00" />
       ) : (
         <>
-          <Text style={styles.header}> {live.temp}°</Text>
-          <Text style={styles.subtext}> ● Live: {live.time} </Text>
+          <Text style={styles.header}> {live.temp.toFixed(1)}°</Text>
+          <Text style={styles.subtext}>● Live: {live.time} </Text>
+
+          {/* Add a View with margin to create the 50px space */}
+          <View style={styles.margin}>
+            <MidBody></MidBody>
+          </View>
         </>
       )}
 
@@ -37,9 +43,27 @@ export default function Body() {
     </SafeAreaView>
   );
 }
+const styles = StyleSheet.create({
+  header: {
+    color: "white",
+    fontSize: "60",
+    fontFamily: "Roboto, sans-serif",
+    textAlign: "center",
+  },
+  subtext: {
+    color: "#7eed9a",
+    fontSize: "15",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+  },
+  margin: {
+    marginTop: "50",
+  },
+});
 
 //function that fetches and updates the live temperature.
-async function updateLiveTemp(setLive, setLoading) {
+function updateLiveTemp(setLive, setLoading) {
   //fireabse configuration properties.
   const firebaseConfig = {
     apiKey: "AIzaSyD38K9ZpLZpFQbGruwO3EnoGSOrhmY45Ug",
@@ -51,7 +75,7 @@ async function updateLiveTemp(setLive, setLoading) {
     appId: "1x:206130198957:web:a8d92d4c0c923d92004924",
     measurementId: "G-HQCMWBSZK4",
   };
-  console.log("entered function");
+  //console.log("entered function");
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
@@ -67,7 +91,6 @@ async function updateLiveTemp(setLive, setLoading) {
         hum: data.humiditydata || 0, // Fallback to 0 if humiditydata is missing
         time: timestamp.substring(11, 16) || "N/A",
       });
-      
     } else {
       console.log("No data available");
     }
@@ -76,15 +99,3 @@ async function updateLiveTemp(setLive, setLoading) {
   // Return a cleanup function to remove the listener
   return () => unsubscribe();
 }
-
-const styles = StyleSheet.create({
-  header: {
-    color: "white",
-    fontSize: "60",
-    fontFamily: "Roboto, sans-serif",
-  },
-  subtext: {
-    color: "#7eed9a",
-    fontSize: "15",
-  },
-});
