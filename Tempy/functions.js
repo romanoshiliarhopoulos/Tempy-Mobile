@@ -1,152 +1,70 @@
+import { initializeApp, getApps, getApp } from "firebase/app";
 import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  ScrollView,
-  Dimensions,
-} from "react-native";
-import { useState, useEffect } from "react";
+  getFirestore,
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs,
+} from "firebase/firestore";
 
-export default function MidBody() {
-  const [tempData, setTempData] = useState<number[]>(Array(24).fill(0));
-  const [humidityData, setHumidityData] = useState<number[]>(Array(24).fill(0));
-  const [timeLabels, setTimeLabels] = useState<string[]>(Array(24).fill("Now"));
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyD38K9ZpLZpFQbGruwO3EnoGSOrhmY45Ug",
+  authDomain: "iot-app-20b70.firebaseapp.com",
+  databaseURL: "https://iot-app-20b70-default-rtdb.firebaseio.com",
+  projectId: "iot-app-20b70",
+  storageBucket: "iot-app-20b70.appspot.com",
+  messagingSenderId: "206130198957",
+  appId: "1x:206130198957:web:a8d92d4c0c923d92004924",
+  measurementId: "G-HQCMWBSZK4",
+};
 
-  useEffect(() => {
-    // Simulating fetching data and updating state
-    const fetchData = async () => {
-      // Replace this with real data-fetching logic
-      const temperatures = Array.from({ length: 24 }, () =>
-        Math.round(Math.random() * 40)
-      );
-      const humidities = Array.from({ length: 24 }, () =>
-        Math.round(Math.random() * 100)
-      );
-
-      const timeArray = Array(24)
-        .fill(null)
-        .map((_, index) => {
-          const date = new Date();
-          date.setHours(date.getHours() - index);
-          return `${date.getHours()}:00`;
-        });
-
-      setTempData(temperatures.reverse());
-      setHumidityData(humidities.reverse());
-      setTimeLabels(timeArray.reverse());
-    };
-
-    fetchData();
-  }, []);
-
-  return (
-    <SafeAreaView style={styles.container}>
-      {/* Temperature Scroll View */}
-      <View style={styles.view}>
-        <View style={styles.row}>
-          <Text style={styles.text}>Temperature:</Text>
-          <Text style={styles.textLeft}>Past 12h</Text>
-        </View>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContainer}
-        >
-          {tempData.map((temp, index) => (
-            <View key={index} style={styles.dataItem}>
-              <Text style={styles.timeLabel}>{timeLabels[index]}</Text>
-              <Text style={styles.dataValue}>{temp}°</Text>
-            </View>
-          ))}
-        </ScrollView>
-      </View>
-
-      {/* Humidity Scroll View */}
-      <View style={styles.view2}>
-        <View style={styles.row}>
-          <Text style={styles.text}>Humidity:</Text>
-          <Text style={styles.textLeft}>Past 12h</Text>
-        </View>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContainer}
-        >
-          {humidityData.map((humidity, index) => (
-            <View key={index} style={styles.dataItem}>
-              <Text style={styles.timeLabel}>{timeLabels[index]}</Text>
-              <Text style={styles.dataValue}>{humidity}%</Text>
-            </View>
-          ))}
-        </ScrollView>
-      </View>
-    </SafeAreaView>
-  );
+// Initialize Firebase App (Avoid Duplicate Initialization)
+let app;
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApp(); // Use the existing initialized app
 }
 
-const { width: screenWidth } = Dimensions.get("window");
+// Firestore Initialization
+const dbFirestore = getFirestore(app);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F5F5F5",
-  },
-  view: {
-    backgroundColor: "#496481",
-    borderRadius: 20,
-    height: 200,
-    width: screenWidth * 0.87,
-    alignSelf: "center",
-    marginTop: 20,
-    padding: 10,
-  },
-  view2: {
-    backgroundColor: "#496481",
-    borderRadius: 20,
-    height: 200,
-    width: screenWidth * 0.87,
-    alignSelf: "center",
-    marginTop: 25,
-    padding: 10,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 13,
-    fontFamily: "Calibri",
-    color: "white",
-  },
-  textLeft: {
-    fontSize: 13,
-    fontFamily: "Calibri",
-    color: "white",
-  },
-  scrollContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 10,
-  },
-  dataItem: {
-    width: 60,
-    height: 100,
-    backgroundColor: "#3C4D5C",
-    borderRadius: 10,
-    marginHorizontal: 5,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  timeLabel: {
-    fontSize: 12,
-    color: "white",
-    marginBottom: 5,
-  },
-  dataValue: {
-    fontSize: 16,
-    color: "white",
-    fontWeight: "bold",
-  },
-});
+// Function to Get Last N Entries
+export async function lastNentries(n) {
+  try {
+    const readingsCollection = collection(dbFirestore, "readings"); // Reference to the Firestore collection
+    const q = query(readingsCollection, orderBy("time", "desc"), limit(n)); // Firestore query
+    const querySnapshot = await getDocs(q); // Execute the query
+
+    if (querySnapshot.empty) {
+      console.log("No matching documents!");
+      return [];
+    }
+
+    const documents = [];
+    querySnapshot.forEach((doc) => {
+      documents.push(doc.data()); // Collect document data
+    });
+
+    return documents;
+  } catch (error) {
+    console.error("Error getting last entries: ", error);
+    return [];
+  }
+}
+export function get24HourTime(unixTimestamp) {
+  const date = new Date(unixTimestamp * 1000);
+
+  // Extract hours and minutes
+  const hours = date.getHours(); // Returns 0-23
+  const minutes = date.getMinutes(); // Returns 0-59
+
+  // Format hours and minutes to always be two digits
+  const formattedHours = String(hours).padStart(2, "0");
+  const formattedMinutes = String(minutes).padStart(2, "0");
+
+  // Combine into a 24-hour time string
+  return `${formattedHours}:${formattedMinutes}`;
+}

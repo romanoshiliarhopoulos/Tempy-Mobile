@@ -1,3 +1,4 @@
+/* Body.js */
 import {
   StyleSheet,
   Text,
@@ -10,6 +11,7 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { useEffect, useState } from "react";
 import MidBody from "./MidBody";
+import { getApps, getApp } from "firebase/app";
 
 //this array will hold the live temperature and humidity values, temp at index 0 and hum at index 1
 
@@ -34,7 +36,7 @@ export default function Body() {
 
           {/* Add a View with margin to create the 50px space */}
           <View style={styles.margin}>
-            <MidBody></MidBody>
+            <MidBody live={live}></MidBody>
           </View>
         </>
       )}
@@ -77,7 +79,13 @@ function updateLiveTemp(setLive, setLoading) {
   };
   //console.log("entered function");
 
-  const app = initializeApp(firebaseConfig);
+  // Initialize Firebase App (Avoid Duplicate Initialization)
+  let app;
+  if (!getApps().length) {
+    app = initializeApp(firebaseConfig);
+  } else {
+    app = getApp(); // Use the existing initialized app
+  }
   const db = getDatabase(app);
   const readingsRef = ref(db, "readings");
 

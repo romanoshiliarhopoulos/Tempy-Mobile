@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, ScrollView } from "react-native";
 import Body from "./Body";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -10,14 +10,15 @@ export default function App() {
         colors={["#487eb8", "#1a1b24"]}
         style={[StyleSheet.absoluteFill]}
       />
-      <Text> </Text>
-      <Body />
-      <View style={styles.header}>
+      <ScrollView>
         <Text> </Text>
-        <Text> </Text>
-        <Text style={styles.text}>This is Tempy!</Text>
-      </View>
-
+        <Body />
+        <View style={styles.header}>
+          <Text> </Text>
+          <Text> </Text>
+          <Text style={styles.text}>This is Tempy!</Text>
+        </View>
+      </ScrollView>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
