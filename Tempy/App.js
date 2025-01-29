@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, SafeAreaView, ScrollView } from "react-native";
 import Body from "./Body";
 import { LinearGradient } from "expo-linear-gradient";
+import Charts from "./Charts";
 
 export default function App() {
   return (
@@ -10,9 +11,13 @@ export default function App() {
         colors={["#487eb8", "#1a1b24"]}
         style={[StyleSheet.absoluteFill]}
       />
-      <ScrollView>
+      <ScrollView
+        showsHorizontalScrollIndicator={false} // Hides the horizontal scroll bar
+        showsVerticalScrollIndicator={false}
+      >
         <Text> </Text>
         <Body />
+
         <View style={styles.header}>
           <Text> </Text>
           <Text> </Text>

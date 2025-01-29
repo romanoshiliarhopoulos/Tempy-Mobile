@@ -26,7 +26,7 @@ export default function MidBody({ live }) {
 
         const avgDataArray = [];
         avgDataArray.push({
-          temperature: live.temp,
+          temperature: live.temp.toFixed(1),
           humidity: live.hum,
           time: "Now",
         });
@@ -111,8 +111,8 @@ const styles = StyleSheet.create({
   view: {
     backgroundColor: "#496481",
     color: "white",
-    borderRadius: 20,
-    width: screenWidth * 0.93, //takes up 87% of the screens width...
+    borderRadius: 15,
+    width: screenWidth * 0.93, //takes up 93% of the screens width...
     alignSelf: "center", // Centers the element horizontally
   },
   text: {
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   view2: {
     backgroundColor: "#496481",
     color: "white",
-    borderRadius: 20,
+    borderRadius: 15,
     width: screenWidth * 0.93, //takes up 87% of the screens width...
     alignSelf: "center", // Centers the element horizontally
     marginTop: 25,

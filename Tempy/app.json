@@ -2,10 +2,12 @@
   "expo": {
     "name": "Tempy",
     "slug": "Tempy",
+    "description": "Tracks environmental conditions in my dorm room",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "jsEngine": "hermes",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -23,6 +25,17 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "486e4dd8-43a0-4923-9293-774593e69d9f"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/486e4dd8-43a0-4923-9293-774593e69d9f"
     }
   }
 }
