@@ -191,7 +191,7 @@ export default function Charts() {
           <Text style={styles.text}>Humidity:</Text>
           
         </View>
-        {/* For the Temperature chart */}
+        {/* For the Temperature hart */}
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
