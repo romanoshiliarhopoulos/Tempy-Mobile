@@ -69,15 +69,15 @@ export default function Charts() {
       },
     ],
   };
-    const dataHum = {
-      labels: labels,
-      datasets: [
-        {
-          data: humdata,
-          strokeWidth: 2, // optional
-        },
-      ],
-    };
+  const dataHum = {
+    labels: labels,
+    datasets: [
+      {
+        data: humdata,
+        strokeWidth: 2, // optional
+      },
+    ],
+  };
 
   const chartConfig = {
     backgroundGradientFrom: "#1a1b24",
@@ -104,31 +104,31 @@ export default function Charts() {
       fontSize: 10, // Adjust the font size for both x and y axis labels
     },
   };
-    const chartConfigHum = {
-      backgroundGradientFrom: "#1a1b24",
-      backgroundGradientTo: "#1a1b24",
-      decimalPlaces: 1, // Matches precision of web version
-      color: (opacity = 1) => `rgba(80, 191, 255, ${opacity})`,
-      labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-      fillShadowGradient: "#80bfff", // Bright light blue shadow
-      fillShadowGradientOpacity: 0.6,
-      style: {
-        borderRadius: 10,
-        paddingRight: 0,
-        paddingLeft: 0,
-        marginRight: 0,
-        color: "white",
-      },
-      propsForDots: {
-        r: "0", // No dots, similar to web
-      },
-      propsForBackgroundLines: {
-        stroke: "transparent", // Hide grid lines like in the web
-      },
-      propsForLabels: {
-        fontSize: 10, // Adjust the font size for both x and y axis labels
-      },
-    };
+  const chartConfigHum = {
+    backgroundGradientFrom: "#1a1b24",
+    backgroundGradientTo: "#1a1b24",
+    decimalPlaces: 1, // Matches precision of web version
+    color: (opacity = 1) => `rgba(80, 191, 255, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    fillShadowGradient: "#80bfff", // Bright light blue shadow
+    fillShadowGradientOpacity: 0.6,
+    style: {
+      borderRadius: 10,
+      paddingRight: 0,
+      paddingLeft: 0,
+      marginRight: 0,
+      color: "white",
+    },
+    propsForDots: {
+      r: "0", // No dots,
+    },
+    propsForBackgroundLines: {
+      stroke: "transparent", // Hide grid lines like in the web
+    },
+    propsForLabels: {
+      fontSize: 10, // Adjust the font size for both x and y axis labels
+    },
+  };
 
   return (
     <View style={styles.parent}>
@@ -189,7 +189,6 @@ export default function Charts() {
         {/* For the Temperature and drop down menu row*/}
         <View style={styles.row}>
           <Text style={styles.text}>Humidity:</Text>
-          
         </View>
         {/* For the Temperature Chart */}
         <View
@@ -238,8 +237,8 @@ const styles = StyleSheet.create({
   chartViewHum: {
     backgroundColor: "#496481",
     width: "100%",
-      borderRadius: 15,
-    marginTop: 40
+    borderRadius: 15,
+    marginTop: 40,
   },
   row: {
     flexDirection: "row", // Places children in a row
