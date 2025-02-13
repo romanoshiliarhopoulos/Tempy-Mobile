@@ -123,7 +123,7 @@ export default function Charts() {
       r: "0", // No dots,
     },
     propsForBackgroundLines: {
-      stroke: "transparent", //   lines like in the web
+      stroke: "transparent", //  like in the web
     },
     propsForLabels: {
       fontSize: 10, // Adjust the font size for both x and y axis labels
