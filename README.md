@@ -3,7 +3,7 @@
 This is the repository for a mobile app to measure the temperature and humidity of my dorm room remotely.
 
 <p align="center">
-  <img src="[https://github.com/user-attachments/assets/42751a78-43cb-4ed3-a6c3-bd7f030815a1](https://github.com/user-attachments/assets/c386cedc-5174-4cce-ac60-ea5c28d02a21)" width="400">
+  <img src="https://github.com/user-attachments/assets/c386cedc-5174-4cce-ac60-ea5c28d02a21" width="400">
 </p>
 
 <p align="center">
