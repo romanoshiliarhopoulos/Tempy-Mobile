@@ -126,7 +126,7 @@ export default function Charts() {
       stroke: "transparent", //  in the web
     },
     propsForLabels: {
-      fontSize: 10, // Adjust the font size for both x and y axis labels
+      fontSize: 10,
     },
   };
 
