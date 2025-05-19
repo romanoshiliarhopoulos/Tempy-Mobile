@@ -9,6 +9,7 @@
     "userInterfaceStyle": "light",
     "jsEngine": "hermes",
     "newArchEnabled": true,
+    "runtimeVersion": "1.0.0",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -32,9 +33,7 @@
       "eas": {
         "projectId": "486e4dd8-43a0-4923-9293-774593e69d9f"
       }
-    },
-    "runtimeVersion": {
-      "policy": "appVersion"
+    
     },
     "updates": {
       "url": "https://u.expo.dev/486e4dd8-43a0-4923-9293-774593e69d9f"
